@@ -1,0 +1,371 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0px;
+    padding: opx;
+}
+.container{
+ max-width: 1000px;
+  width: 100%;
+  margin: 30px auto;
+  padding: 0 1rem;
+}
+.bg_login {
+    height: 683px;
+    background: linear-gradient(190deg, #034FA3 21.58%, #168A55 100%);
+}
+.letak_logo{
+margin-top: 50px;
+width: 118px;
+height: 119px;
+}
+.judul_login{
+width: 292px;
+height: 29px;
+margin-bottom: 100px;
+font-family: 'Inter';
+font-style: normal;
+font-weight: 800;
+line-height: 39px;
+color: #FFFFFF;
+}
+
+.tulisan_login {
+    text-align: center;
+    /*membuat semua huruf menjadi kapital*/
+    text-transform: uppercase;
+}
+
+.kotak_login {
+    width: 350px;
+    background: white;
+    /*meletakkan form ke tengah*/
+    margin: 60px auto;
+    padding: 30px 20px;
+    box-shadow: 0px 0px 25px 4px #d6d6d6;
+}
+
+label {
+    font-size: 11pt;
+}
+
+.form_login {
+    /*membuat lebar form penuh*/
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    font-size: 11pt;
+    margin-bottom: 20px;
+}
+
+.tombol_login {
+    background: #2aa7e2;
+    color: white;
+    font-size: 11pt;
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+}
+
+.link {
+    color: #232323;
+    text-decoration: none;
+    font-size: 10pt;
+}
+
+.alert {
+    background: #e44e4e;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #b32929;
+}
+/* header */
+.header{
+    position: absolute;
+    width: 100%;
+    height: 36px;
+    background: #8FBCEE;;
+    padding-bottom: 10px;
+}
+.header #btn{
+    position: absolute;
+    color: #FFFFFF;
+    left: 130px;
+    font-size: 30px;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    line-height: 50px;
+    transform: translate(-50%);
+    pointer-events: auto;
+}
+.header.active #btn{
+    left: 300px;
+}
+
+/* side bar */
+.bg_side{
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    background:  #FFFFFF;;
+}
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    background: #033165;
+     color: white;
+    padding: 6px 16px;
+    height: 100%;
+    box-shadow: 5px 0 30px rgba(0, 0, 0,.1);
+}
+.sidebar.active{
+    width: 240px;
+}
+.sidebar.logo_content.logo{
+    display: flex;
+    color: #FFFFFF;
+    height: 50px;
+    width: 100%;
+    font-size: 30px;
+    margin-left: 5px;
+    align-items: center;
+    pointer-events: none;
+    opacity: 1;
+}
+.sidebar.active .logo_content .logo .logo_name{
+    font-size: 23px;
+   
+}
+.sidebar .logo_content .logo .logo_name{
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 10 px;
+}
+
+.sidebar .src{
+   opacity: 0;
+}
+.sidebar.active .src{
+    opacity: 1;
+}
+
+.sidebar i{
+    height: 50px;
+    min-width: 0px;
+    border-radius: 12px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 25px;
+}
+.sidebar ul {
+    margin-top: 10px;
+    left: 0;
+}
+.sidebar ul li{
+    position: relative;
+    height: 50px;
+    width: 100%;
+    margin: 0;
+    list-style: none;
+    line-height: 50px;
+}
+.sidebar ul li a{
+    color: #FFFFFF;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    border-radius: 20px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+.sidebar ul li:hover{
+    color: #0b2997;
+    background: #7b7c7d;
+}
+.sidebar .link_name{
+    opacity: 0;
+    pointer-events: none;
+}
+.sidebar.active .link_name{
+    opacity: 1;
+    pointer-events: auto;
+}
+.sidebar ul li .tooltip{
+    position: absolute;
+    left: 0;
+    top: 10;
+    transform: translate(-40% , -50%);
+    border-radius: 10px;
+    height: 35px;
+    width: 130px;
+    background: #FFFFFF;
+    line-height: 35px;
+    text-align: center;
+    font-size: 13px;
+    display: block;
+    color: #242424;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    pointer-events: none;
+    opacity: 0;
+    transition: all .5s ease;
+}
+.sidebar.active ul li .tooltip{
+    display: none;
+}
+.sidebar ul li:hover .tooltip{
+   
+    opacity: 6;
+    top: 50%;
+}
+.home_content{
+    position: relative;
+    height: 100%;
+    top: 40px;
+    width: calc(100% = 400px);
+    text-align: center;
+}
+.home_content .text{
+    font-size: 25px;
+    font-weight: 500;
+    color: #242424;
+    padding: 12px 24px;
+}
+.home_content .add{
+    position: relative;
+    left: 130px;
+    top: 0;
+    border: 10px;
+    height: 35px;
+    width: 130px;
+    background: #033165;
+    line-height: 35px;
+    text-align: center;
+    font-size: 13px;
+    display: block;
+    color: #242424;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    opacity: 1;
+}
+.home_content .add a{
+     color: #FFFFFF;
+}
+
+.home_content.active .add{
+    left: 300px;
+}
+.home_content .table{
+    position: relative;
+    width: 85%;
+    height: 100%;
+    left: 125px;
+    top: 16px;
+    font-family: sans-serif;
+    color: #444;
+    border-collapse: collapse;
+    border: 1px solid #f2f5f7;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.home_content .table .th{
+    background: #033165 ;
+    color: whitesmoke;
+    font-weight: normal;
+}
+.home_content .table td{
+    padding: 8px 20px;
+    text-align: center;
+}
+
+.home_content .table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.home_content.active .table{
+left: 300px;
+width: 75%;
+font-size: 14px;
+}
+.home_content .table-form{
+    position: relative;
+    margin:  auto;
+}
+.edit{
+margin: auto;
+    width: 50px;
+     background: grey;
+   border: 3px;
+}
+.edit a{
+ color: whitesmoke;
+}
+.hapus{
+     width: 66px;
+    background: red;
+    border: 3px;
+    margin: auto;
+}
+.hapus a{
+    color: whitesmoke;
+}
+
+@media screen and (max-width:680px) {
+.header #btn{
+    position: absolute;
+    left: 125px;
+}
+.header.active #btn{
+    left: 280px;
+}
+.sidebar{
+    width: 73px;
+}
+.sidebar.active{
+    width: 175px;
+}
+    .home_content{
+        width: 74%;
+        height: 100%;
+        overflow-x: hidden;
+        padding: 20px;
+    }
+    .home_content .add{
+     position: relative;
+    left: 25px;
+    height: 35px;
+    width: 90px;
+    font-size: 10px;
+}
+
+    .home_content.active .add{
+    left: 100px;
+}
+
+.home_content.active .text{
+    font-size: 20px;
+    font-weight: 500;
+    color: #242424;
+    padding: 12px 24px;
+}
+.home_content .table{
+    position: relative;
+    width: 95%;
+    height: 100%;
+    left: 6px;
+    font-size: 9px;
+}
+.home_content .table td{
+    text-align: left;
+    padding: 2px;
+}
+
+.home_content.active .table{
+left: 100px;
+width: 95%;
+font-size: 14px;
+}
+}
