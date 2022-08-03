@@ -13,136 +13,175 @@ include 'koneksi.php';
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
-<body class="bg_side">
-    <?php
-    session_start();
-    // cek apakah yang mengakses halaman ini sudah login
-    if ($_SESSION['level'] == "") {
-        header("location:index.php?pesan=gagal");
-    }
-    ?>
-    <!-- header -->
-    <div class="header">
-        <i class='bx bx-menu' id='btn'></i>
-    </div>
+<body>
+    <div class="container">
 
-    <!-- sidebar -->
-    <div class="sidebar">
-        <div class="logo_content">
-            <div class="logo">
-                <!-- icon logo -->
-                <div class="logo_name"> Hello </div>
+
+        <input type="checkbox" id="check">
+        <label for="check">
+            <i class='bx bx-menu' id="btn"></i>
+            <i class='bx bxs-x-square' id="cancel"></i>
+        </label>
+
+        <div class="sidebar">
+            <header>
+                <Img src=""></Img> My Admin
+            </header>
+            <ul>
+                <li>
+                    <a href="#">
+                        <i class="bx bxs-home"></i>
+                        <Span class="link-name">Home</Span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"><i class='bx bxs-group'></i>
+                        <span class="link-name"> Data Pegawai</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"><i class='bx bxs-book'></i></i>
+                        <span class="link-name">Daftar Kehadiran</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+
             </div>
+            <h2 style="margin-top: 60px;"> Data Pegawai</h2>
+            <div class="table-container">
+                <table class="table " border="1">
+                    <thead class="thead">
+                        <th scope="col" class="th column-primary" data-header="Pegawai"><span>No</span></th>
+                        <th scope="col" class="th">NIP</th>
+                        <th scope="col" class="th">Nama</th>
+                        <th scope="col" class="th">Alamat</th>
+                        <th scope="col" class="th">Email</th>
+                        <th scope="col" class="th">Password</th>
+                        <th scope="col" class="th">Aksi</th>
+                    </thead>
+                    <tbody>
+                        <?php
 
-        </div>
-        <div class="src">
-            <!-- icon src -->
-            <hr color="white">
-        </div>
-        <ul class="nav">
-            <li>
-                <a href="">
-                    <i class='bx bxs-home'></i>
-                    <span class="link_name">Home</span>
-                </a>
-                <span class="tooltip">Home</span>
-            </li>
-            <li style="margin-top: 30px;">
-                <a href="">
-                    <i class='bx bx-file'></i>
-                    <span class="link_name">Pegawai</span>
-                </a>
-                <span class="tooltip">Pegawai</span>
-            </li>
-            <li>
-                <a href="">
-                    <i class='bx bx-user-circle'></i>
-                    <span class="link_name">Profile</span>
-                </a>
-                <span class="tooltip ">Profile</span>
-            </li>
-        </ul>
-    </div>
+                        $halaman = 10;
+                        $page = (isset($_GET["halaman"])) ? (int)$_GET["halaman"] : 1;
+                        $mulai = ($page > 1) ? ($page * $halaman) - $halaman : 0;
 
-    <!-- Main -->
-    <div class="home_content">
-        <div class="text">Data Pegawai </div>
-        <div class="add">
-            <a href="#form">
-                <div>
+                        //query ke database SELECT tabel mahasiswa urut berdasarkan id yang paling besar
+                        $sql = mysqli_query($koneksi, "SELECT * FROM pegawai ORDER BY NIP ASC") or die(mysqli_error($koneksi));
+                        $total = mysqli_num_rows($sql);
+                        $pages = ceil($total / $halaman);
+                        $query = mysqli_query($koneksi, "SELECT * FROM  pegawai LIMIT $mulai, $halaman") or die(mysql_error($koneksi));
+                        $no = $mulai + 1;
 
-                    <p>Tambah Data</p>
-                </div>
+                        //jika query diatas menghasilkan nilai > 0 maka menjalankan script di bawah if...
 
-            </a>
+                        //membuat variabel $no untuk menyimpan nomor urut
 
-        </div>
-
-
-        <table class="table">
-            <thead class="th">
-                <th>NO</th>
-                <th>NIP</th>
-                <th>Nama</th>
-                <th>Jabatan</th>
-                <th>Alamat</th>
-                <th>email</th>
-                <th width="100px">Aksi</th>
-            </thead>
-            <tbody>
-                <?php
-                //query ke database SELECT tabel mahasiswa urut berdasarkan id yang paling besar
-                $sql = mysqli_query($koneksi, "SELECT * FROM pegawai ORDER BY NIP ASC") or die(mysqli_error($koneksi));
-                //jika query diatas menghasilkan nilai > 0 maka menjalankan script di bawah if...
-                if (mysqli_num_rows($sql) > 0) {
-                    //membuat variabel $no untuk menyimpan nomor urut
-                    $no = 1;
-                    //melakukan perulangan while dengan dari dari query $sql
-                    while ($data = mysqli_fetch_assoc($sql)) {
-                        //menampilkan data perulangan
-                        echo '
+                        //melakukan perulangan while dengan dari dari query $sql
+                        while ($data = mysqli_fetch_assoc($query)) {
+                            //menampilkan data perulangan
+                            echo '
 						<tr>
-							<td>' . $no . '</td>
-							<td>' . $data['NIP'] . '</td>
-							<td>' . $data['Nama'] . '</td>
-							<td>' . $data['Jabatan'] . '</td>
-							<td>' . $data['alamat'] . '</td>
-                            <td>' . $data['email'] . '</td>
-							<td >
+							<td class="td">' .   $no++ . '</td>
+							<td class="td">' . $data['NIP'] . '</td>
+							<td class="td">' . $data['Nama'] . '</td>
+							<td class="td">' . $data['Jabatan'] . '</td>
+							<td class="td">' . $data['alamat'] . '</td>
+                            <td class="td">' . $data['email'] . '</td>
+							<td class="td">
                               <table >
                               <thead>
-                                 <th><div class="edit"><a href="tambah_mahasiswa.php?NIP=' . $data['NIP'] . '" >Edit</a></div></th>
-								 <th><div class="hapus"><a href="delete_mahasiswa.php?NIP=' . $data['NIP'] . '"  onclick="return confirm(\'Yakin ingin menghapus data ini?\')">Delete</a> </div></th>
+                                 <th><div class="edit"><a href="tambah_pegawai.php?NIP=' . $data['NIP'] . '" >Edit</a></div></th>
+								 <th><div class="hapus"><a href="delete_pegawai.php?NIP=' . $data['NIP'] . '"  onclick="return confirm(\'Yakin ingin menghapus data ini?\')">Delete</a> </div></th>
 							</table>
                                 </td>
 						</tr>
 						';
-                        $no++;
-                    }
-                    //jika query menghasilkan nilai 0
-                } else {
-                    echo '
-					<tr>
-						<td>Tidak ada data.</td>
-					</tr>
-					';
-                }
+                        }
+                        //jika query menghasilkan nilai 0
+
+
+                        ?>
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="page">
+                <?php for ($i = 1; $i <= $pages; $i++) { ?>
+                    <a href="?halaman=<?php echo $i; ?>" style="margin-top: 220px; position:relative;"><?php echo $i; ?></a>
+
+                <?php } ?>
+            </div>
+
+
+
+            <div class="link-name">
+                <button onclick="add()" style="background-color: #033165; border:0; color:whitesmoke;">Tambah Data</button> &nbsp;&nbsp;
+            </div>
+            <!-- Form data -->
+            <div id="formdata" class="data">
+                <center>
+                    <h1 style="">Form Data Pegawai</h1>
+                </center>
+                <?php
+
                 ?>
-            </tbody>
-        </table>
 
+                <table class="form">
+                    <Form action="tambah_pegawai.php" method="post">
+                        <tr class="tr">
+                            <td><label>NIP</label></td>
+                            <td>:</td>
+                            <td><input type="text" name="Nip" style="width:400px" require></td>
+                        </tr>
+                        <tr style="margin-top: 20px;">
+                            <td width="250"><label>Nama</label></td>
+                            <td>:</td>
+                            <td><input type="text" name="nama" style="width:400px" require></td>
+                        </tr>
+                        <tr class="tr">
+                            <td width="250"><label>Jenis Kelamin</label></td>
+                            <td>:</td>
+                            <td>
+                                <input type="radio" name="gender" value="Laki-laki" require> Laki-laki
+                                <input type="radio" name="gender" value="Perempuan" require> Perempuan
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="250"><label>Alamat</label></td>
+                            <td>:</td>
+                            <td><textarea name="alamat" style="width:300px; height:100px" require> </textarea></td>
+                        </tr>
+                        <tr>
+                            <td width="250"><label>Email</label></td>
+                            <td>:</td>
+                            <td><input type="text" name="email" style="width:400px" require></td>
+                        </tr>
+                        <tr>
+                            <td width="250"><label>Foto</label></td>
+                            <td>:</td>
+                            <td class="foto"><input type="file" name="foto" style="margin-top: 15px;" require></td>
+                        </tr>
+                        <tr>
+                            <td width="250"></td>
+                            <td></td>
+                            <td class="submit"><input type="submit" name="submit" style="background-color:#033165 ; color:whitesmoke; font-size: 20px; border: 0;" value="Simpan" require></td>
+                        </tr>
+                    </Form>
+                </table>
+            </div>
+        </div>
     </div>
-
     <script>
-        let btn = document.querySelector('#btn')
-        let sidebar = document.querySelector('.sidebar')
-        let header = document.querySelector('.header')
-        let main = document.querySelector('.home_content')
-        let form = document.querySelector('.form_content')
-        btn.onclick = function() {
-            sidebar.classList.toggle('active');
-            header.classList.toggle('active');
-            main.classList.toggle('active');
+        function add() {
+            rumah = document.querySelector('#formdata');
+            rumah.classList.remove('malam');
+            rumah.classList.add('siang');
+
         }
     </script>
 </body>
