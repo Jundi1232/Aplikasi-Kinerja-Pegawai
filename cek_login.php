@@ -10,7 +10,9 @@ $password = $_POST['password'];
 
 
 // menyeleksi data user dengan username dan password yang sesuai
-$login = mysqli_query($koneksi, "select * from login where username='$username' and password='$password'");
+
+$login = mysqli_query($koneksi, "SELECT login.email,level,login.password,NIP 
+FROM login INNER JOIN pegawai ON login.email=pegawai.email where login.email='$username' and login.password='$password'");
 // menghitung jumlah data yang ditemukan
 $cek = mysqli_num_rows($login);
 
@@ -23,7 +25,7 @@ if ($cek > 0) {
     if ($data['level'] == "admin") {
 
         // buat session login dan username
-        $_SESSION['username'] = $username;
+        $_SESSION['email'] = $username;
         $_SESSION['level'] = "admin";
         // alihkan ke halaman dashboard admin
         header("location:home_admin.php");
@@ -31,15 +33,15 @@ if ($cek > 0) {
         // cek jika user login sebagai pegawai
     } else if ($data['level'] == "pegawai") {
         // buat session login dan username
-        $_SESSION['username'] = $username;
+        $_SESSION['email'] = $username;
         $_SESSION['level'] = "pegawai";
         // alihkan ke halaman dashboard pegawai
-        header("location:home_pegawai.php");
+        header("location:home_pegawai.php?NIP=$data[NIP]");
 
         // cek jika user login sebagai pengurus
     } else if ($data['level'] == "manager") {
         // buat session login dan username
-        $_SESSION['username'] = $username;
+        $_SESSION['email'] = $username;
         $_SESSION['level'] = "manager";
         // alihkan ke halaman dashboard pengurus
         header("location:halaman_manager.php");

@@ -1,6 +1,23 @@
 <?php
 include 'koneksi.php';
 
+if (isset($_GET['NIP'])) {
+    //membuat variabel $id untuk menyimpan id dari GET id di URL
+    $Nip = $_GET['NIP'];
+
+    //query ke database SELECT tabel mahasiswa berdasarkan id = $id
+    $select = mysqli_query($koneksi, "SELECT * FROM pegawai WHERE NIP='$Nip'") or die(mysqli_error($koneksi));
+
+    //jika hasil query = 0 maka muncul pesan error
+    if (mysqli_num_rows($select) == 0) {
+
+        //jika hasil query > 0
+    } else {
+        //membuat variabel $data dan menyimpan data row dari query
+        $data = mysqli_fetch_assoc($select);
+    }
+}
+
 
 if (isset($_POST['submit'])) {
     $Nip    = $_POST['Nip'];
@@ -11,32 +28,32 @@ if (isset($_POST['submit'])) {
     $email   = $_POST['email'];
     $ekstensi_diperbolehkan    = array('png', 'jpg', 'jpeg');
     $foto = $_FILES['file']['name'];
-
     $x = explode('.', $foto);
-    $foto_baru =  round(microtime(true)) . '.' . end($x);
+    $foto_baru = round(microtime(true)) . '.' . end($x);
     $ekstensi = strtolower(end($x));
     $ukuran    = $_FILES['file']['size'];
     $file_tmp = $_FILES['file']['tmp_name'];
 
+
     $cek = mysqli_query($koneksi, "SELECT * FROM pegawai WHERE NIP='$Nip'") or die(mysqli_error($koneksi));
+    $foto_lama = mysqli_fetch_array($cek);
+    if ($foto_lama['foto'] != "") {
+        unlink("foto/" . $foto_lama['foto']);
+    }
+    if (in_array($ekstensi, $ekstensi_diperbolehkan) === true) {
+        if ($ukuran < 1044070) {
 
-    if (mysqli_num_rows($cek) == 0) {
-        if (in_array($ekstensi, $ekstensi_diperbolehkan) === true) {
-            if ($ukuran < 1044070) {
-                move_uploaded_file($file_tmp, 'foto/' . $foto_baru);
-                $sql = mysqli_query($koneksi, "INSERT INTO pegawai(NIP , Nama, gender, Jabatan, alamat ,email, foto) VALUES('$Nip', '$Nama', '$gender','$jabatan', '$alamat', '$email', '$foto_baru')") or die(mysqli_error($koneksi));
+            move_uploaded_file($file_tmp, 'foto/' . $foto_baru);
+            $sql = mysqli_query($koneksi, "UPDATE pegawai  SET Nama='$Nama', gender='$gender', jabatan='$jabatan',alamat='$alamat', email='email', foto='$foto_baru' where NIP='$Nip'") or die(mysqli_error($koneksi));
 
-                if ($sql) {
-                    echo '<script>alert("Berhasil menambahkan data."); document.location="home_admin.php";</script>';
-                } else {
-                    echo '<div class="alert alert-warning">Gagal melakukan proses tambah data.</div>';
-                }
+            if ($sql) {
+                echo '<script>alert("Berhasil menambahkan data."); document.location="home_admin.php";</script>';
+            } else {
+                echo '<div class="alert alert-warning">Gagal melakukan proses tambah data.</div>';
             }
-        } else {
-            echo 'EKSTENSI FILE YANG DI UPLOAD TIDAK DI PERBOLEHKAN';
         }
     } else {
-        echo '<div class="alert alert-warning">Gagal, NIM sudah terdaftar.</div>';
+        echo 'EKSTENSI FILE YANG DI UPLOAD TIDAK DI PERBOLEHKAN';
     }
 }
 ?>
@@ -93,18 +110,18 @@ if (isset($_POST['submit'])) {
 
 
                 <table class="form">
-                    <Form action="tambah_pegawai.php" method="post" enctype="multipart/form-data">
-                        <tr>
+                    <Form action="edit_pegawai.php" method="post" enctype="multipart/form-data">
+                        <tr class="tr">
                             <td><label>NIP</label></td>
                             <td>:</td>
-                            <td><input type="text" name="Nip" class="input" require></td>
+                            <td><input type="text" name="Nip" class="input" value="<?php echo $data['NIP'] ?>" require></td>
                         </tr>
-                        <tr>
+                        <tr style="margin-top: 20px;">
                             <td><label>Nama</label></td>
                             <td>:</td>
-                            <td><input type="text" name="nama" class="input" require></td>
+                            <td><input type="text" name="nama" class="input" value="<?php echo $data['Nama'] ?>" require></td>
                         </tr>
-                        <tr>
+                        <tr class="tr">
                             <td><label>Jenis Kelamin</label></td>
                             <td>:</td>
                             <td>
@@ -133,7 +150,7 @@ if (isset($_POST['submit'])) {
                         <tr>
                             <td><label>Email</label></td>
                             <td>:</td>
-                            <td><input type="text" name="email" class="input" require></td>
+                            <td><input type="text" name="email" class="input" value="<?php echo $data['email'] ?>" require></td>
                         </tr>
                         <tr>
                             <td><label>Foto</label></td>

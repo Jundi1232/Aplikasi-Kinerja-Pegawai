@@ -10,7 +10,7 @@
     <div class="container">
         <center>
             <table>
-                <th><img src="gambar/logo.png" alt=""></th>
+                <th><img src="gambar/logo.png" class="letak_logo" alt=""></th>
                 <th>
                     <h2 class="judul_login"> P2KPTK2 Jakarta Utara </h2>
                 </th>
