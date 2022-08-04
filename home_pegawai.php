@@ -1,8 +1,23 @@
 <!DOCTYPE html>
 <?php
 include 'koneksi.php';
+
+//membuat variabel $id untuk menyimpan id dari GET id di URL
+$Nip = $_GET['NIP'];
+
+$select = mysqli_query($koneksi, "SELECT * FROM pegawai WHERE NIP='$Nip'") or die(mysqli_error($koneksi));
+
+//jika hasil query = 0 maka muncul pesan error
+if (mysqli_num_rows($select) == 0) {
+
+    //jika hasil query > 0
+} else {
+    //membuat variabel $data dan menyimpan data row dari query
+    $data = mysqli_fetch_assoc($select);
+}
+
 ?>
-<html>
+
 
 <head>
     <title>Halaman admin - www.malasngoding.com</title>
@@ -24,7 +39,8 @@ include 'koneksi.php';
     </div>
     <div class="sidebar">
         <header>
-            <Img src=""></Img> My Admin
+
+
         </header>
         <ul>
             <li>
@@ -47,7 +63,13 @@ include 'koneksi.php';
         </ul>
     </div>
     <div class="main-content">
-        <h2> Laporan Kinerja Pegawai</h2>
+        <div class="header">
+            <div class="name">
+                <p><?php echo $data['Nama'] ?></p>
+                <i class='bx bx-chevron-down hover'></i>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px; text-align:center"> Laporan Kinerja Pegawai</h2>
         <div class="table-container">
             <table class="table " border="1">
                 <thead class="thead">
@@ -61,100 +83,72 @@ include 'koneksi.php';
                 </thead>
                 <tbody>
                     <?php
+
+                    $halaman = 5;
+                    $page = (isset($_GET["halaman"])) ? (int)$_GET["halaman"] : 1;
+                    $mulai = ($page > 1) ? ($page * $halaman) - $halaman : 0;
+
                     //query ke database SELECT tabel mahasiswa urut berdasarkan id yang paling besar
-                    $sql = mysqli_query($koneksi, "SELECT * FROM pegawai ORDER BY NIP ASC") or die(mysqli_error($koneksi));
+                    $sql = mysqli_query($koneksi, "SELECT * FROM laporan_kinerja ") or die(mysqli_error($koneksi));
+                    $total = mysqli_num_rows($sql);
+                    $pages = ceil($total / $halaman);
+                    $query = mysqli_query($koneksi, "SELECT * FROM  laporan_kinerja LIMIT $mulai, $halaman") or die(mysqli_error($koneksi));
+                    $no = $mulai + 1;
+
                     //jika query diatas menghasilkan nilai > 0 maka menjalankan script di bawah if...
-                    if (mysqli_num_rows($sql) > 0) {
-                        //membuat variabel $no untuk menyimpan nomor urut
-                        $no = 1;
-                        //melakukan perulangan while dengan dari dari query $sql
-                        while ($data = mysqli_fetch_assoc($sql)) {
-                            //menampilkan data perulangan
-                            echo '
-						<tr>
-							<td class="td">' . $no . '</td>
-							<td class="td">' . $data['NIP'] . '</td>
-							<td class="td">' . $data['Nama'] . '</td>
-							<td class="td">' . $data['Jabatan'] . '</td>
-							<td class="td">' . $data['alamat'] . '</td>
-                            <td class="td">' . $data['email'] . '</td>
-							<td class="td">
-                              <table >
-                              <thead>
-                                 <th><div class="edit"><a href="tambah_mahasiswa.php?NIP=' . $data['NIP'] . '" >Edit</a></div></th>
-								 <th><div class="hapus"><a href="delete_mahasiswa.php?NIP=' . $data['NIP'] . '"  onclick="return confirm(\'Yakin ingin menghapus data ini?\')">Delete</a> </div></th>
-							</table>
-                                </td>
-						</tr>
-						';
-                            $no++;
-                        }
-                        //jika query menghasilkan nilai 0
-                    } else {
-                        echo '
-					<tr>
-						<td>Tidak ada data.</td>
-					</tr>
-					';
-                    }
+
+                    //membuat variabel $no untuk menyimpan nomor urut
+
+                    //melakukan perulangan while dengan dari dari query $sql
+                    while ($data = mysqli_fetch_assoc($query)) {
+                        //menampilkan data perulangan
                     ?>
+                        <tr>
+                            <td class="td"><?php echo   $no++ ?></td>
+                            <td class="td"><?php echo $data['tempat'] ?></td>
+                            <td class="td"><?php echo $data['tgl_kegiatan'] ?></td>
+                            <td class="td"><?php echo $data['detail'] ?></td>
+                            <td class="td"><?php echo $data['tugas_tambahan'] ?></td>
+                            <td class="td">
+                                <?php
+                                if ($data['foto'] == "") { ?>
+                                    <img src="https://via.placeholder.com/500x500.png?text=PAS+FOTO+SISWA" class="foto">
+                                <?php } else { ?>
+                                    <img src="foto/<?php echo $data['foto']; ?>" class="foto">
+                                <?php } ?>
+                            </td>
+                            <td class="td">
+                                <table>
+                                    <thead>
+                                        <th>
+                                            <div class="edit"><a href="edit_laporan_kinerja.php?NIP=<?php echo  $data['NIP'] ?>">Edit</a></div>
+                                        </th>
+                                        <th>
+                                            <div class="hapus"><a href="delete_laporan_kinerja.php?NIP=<?php echo  $data['NIP'] ?>" onclick="return confirm(\'Yakin ingin menghapus data ini?\')">Delete</a> </div>
+                                        </th>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
+
                 </tbody>
             </table>
+
+
+        </div>
+        <div class="page">
+            <?php for ($i = 1; $i <= $pages; $i++) { ?>
+                <a href="?halaman=<?php echo $i; ?>" style="margin-top: 220px; position:relative;"><?php echo $i; ?></a>
+
+            <?php } ?>
         </div>
 
         <div class="link-name">
-            <button onclick="add()" style="background-color: #033165; border:0; color:whitesmoke;">Tambah Data</button> &nbsp;&nbsp;
-        </div>
-        <!-- Form data -->
-        <div id="formdata" class="data">
-            <center>
-                <h1>Form Laporan Kinerja</h1>
-            </center>
-            <table class="form">
-                <Form action="tambah_pegawai.php" method="post">
-                    <tr class="tr">
-                        <td><label>Tempat Kegiatan</label></td>
-                        <td>:</td>
-                        <td><input type="text" name="tempat" style="width:400px" require></td>
-                    </tr>
-                    <tr style="margin-top: 20px;">
-                        <td><label>Tanggal Kegiatan</label></td>
-                        <td>:</td>
-                        <td><input type="date" name="tgl" style="width:400px" require></td>
-                    </tr>
-                    <tr>
-                        <td width="250"><label>Rincian Kegiatan</label></td>
-                        <td>:</td>
-                        <td><textarea name="rinci" style="width:300px; height:100px" require> </textarea></td>
-                    </tr>
-                    <tr>
-                        <td width="250"><label>Tugas Tambahan</label></td>
-                        <td>:</td>
-                        <td><input type="text" name="tugas" style="width:400px" require></td>
-                    </tr>
-                    <tr>
-                        <td width="250"><label>Foto Kegiatan</label></td>
-                        <td>:</td>
-                        <td class="foto"><input type="file" name="foto" style="margin-top: 15px;" require></td>
-                    </tr>
-                    <tr>
-                        <td width="250"></td>
-                        <td></td>
-                        <td class="submit"><input type="submit" name="submit" style="background-color:#033165 ; color:whitesmoke; font-size: 20px; border: 0;" value="Simpan" require></td>
-                    </tr>
-                </Form>
-            </table>
+            <a href="tambah_laporan.php?NIP=<?php echo  $Nip ?>"> Tambah Data </a>
         </div>
     </div>
-    <script>
-        function add() {
-            rumah = document.querySelector('#formdata');
-            rumah.classList.remove('malam');
-            rumah.classList.add('siang');
 
-            document.location = "#form";
-        }
-    </script>
 </body>
 
 </html>
